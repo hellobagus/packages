@@ -55,7 +55,12 @@ const Package = (props) => {
   const [hasError, setErrors] = useState(false);
   const [nameDelivery, setNameDelivery] = useState('');
   const [hpDelivery, setHpDelivery] = useState('');
+  const [delVehicle, setdelVehicle] = useState('');
   const [nameSender, setSenderName] = useState('');
+  const [nameOtherCourier, setOtherCourier] = useState('');
+  const [nameOtherCus, setOtherCust] = useState('');
+
+  const [nameType, setNameType] = useState('');
   const [hpSender, setSenderHp] = useState('');
   const [quantity, setQuantity] = useState('');
   const [dataGate, setDataGate] = useState([]);
@@ -63,19 +68,24 @@ const Package = (props) => {
   const [dataUnit, setDataUnit] = useState([]);
   const [dataCust, setDataCust] = useState([]);
   const [dataType, setDataType] = useState([]);
+  const [dataCourier, setDataCourier] = useState([]);
 
   const [valueGate, setValueGate] = useState('');
   const [valueTower, setValueTower] = useState('');
   const [valueUnit, setValueUnit] = useState('');
+  const [valueCourier, setValueCourier] = useState('');
   const [valueCust, setValueCust] = useState('');
   const [valueType, setValueType] = useState('');
   const [open, setOpen] = useState(false);
   const [openTower, setOpenTower] = useState(false);
   const [openUnit, setOpenUnit] = useState(false);
   const [openCust, setOpenCust] = useState(false);
+  const [openCourier, setOpenCourier] = useState(false);
+  const [openType, setOpenType] = useState(false);
 
   const [select, setSelectec] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const [itemSelected, setItemSelected] = useState(false);
 
   const selectHandler = (item) => {
     setSelectec(item);
@@ -105,10 +115,22 @@ const Package = (props) => {
     setNameDelivery(index);
   };
 
+  const valueOtherCourier = (index) => {
+    console.log('name', index);
+
+    setOtherCourier(index);
+  };
+
   const valueHpDelivery = (index) => {
     console.log('hpdeli', index);
 
     setHpDelivery(index);
+  };
+
+  const valueDelVehicle = (index) => {
+    console.log('Delivery Vehicle', index);
+
+    setdelVehicle(index);
   };
 
   const valueSenderName = (index) => {
@@ -131,9 +153,11 @@ const Package = (props) => {
 
   const fetchGate = async () => {
     try {
-      const res = await axios.get(
-        'http://34.87.121.155:2121/apiwebpbi/api/gate'
-      );
+      const res = await axios.get('http://103.111.204.131/apiwebpbi/api/gate');
+      // const res = await axios.get(
+      //   'http://34.87.121.155:2121/apiwebpbi/api/gate'
+      // );
+
       setDataGate(res.data.data);
       console.log('datagate', JSON.stringify(dataGate));
     } catch (error) {
@@ -141,10 +165,12 @@ const Package = (props) => {
       alert(hasError.toString());
     }
   };
+
   const fetchTower = async () => {
     try {
       const res = await axios.get(
-        'http://34.87.121.155:2121/apiwebpbi/api/package/tower'
+        'http://103.111.204.131/apiwebpbi/api/package/tower'
+        // 'http://34.87.121.155:2121/apiwebpbi/api/package/tower'
       );
 
       console.log('res tower', res.data.data);
@@ -158,12 +184,32 @@ const Package = (props) => {
     }
   };
 
+  const fetchCourier = async () => {
+    try {
+      const res = await axios.get(
+        'http://103.111.204.131/apiwebpbi/api/package/courier'
+        // 'http://34.87.121.155:2121/apiwebpbi/api/package/courier'
+      );
+      setDataCourier(res.data.data);
+      console.log('data courier', JSON.stringify(dataCourier));
+    } catch (error) {
+      setErrors(error.ressponse.data);
+      alert(hasError.toString());
+    }
+  };
   const gate = valueGate;
   console.log('datagate', gate);
   const towerNo = valueTower;
   console.log('datatowerss', towerNo);
   const unitNo = valueUnit;
   console.log('dataUniit', unitNo);
+  const courier = valueCourier;
+  console.log('dataCourier', courier);
+
+  const customer = dataCust;
+  console.log('customer', customer);
+  const courierOther = nameOtherCourier;
+  console.log('courierOther', courierOther);
 
   const chooseTower = (itemValue) => {
     console.log('itemvalue choose tower', itemValue);
@@ -178,6 +224,18 @@ const Package = (props) => {
     setValueUnit(item);
     // fetchUnit(item);
     fetchCust(item);
+  };
+
+  const chooseCourier = (item) => {
+    console.log('itemvalue choose Courier', item);
+    // setValueTower(item);
+    setValueCourier(item);
+    // fetchUnit(item);
+    fetchCourier(item);
+
+    if (item.courier_cd == 'Other') {
+      console.log('duar dapet');
+    }
   };
 
   //   const chooseCust = (itemCust) => {
@@ -196,11 +254,13 @@ const Package = (props) => {
     const tower = paramsTower.lot_type;
     try {
       const res = await axios.get(
-        `http://34.87.121.155:2121/apiwebpbi/api/package/unit?entity=01&project=01&tower=${tower}`
+        `http://103.111.204.131/apiwebpbi/api/package/unit?entity=01&project=01&tower=${tower}`
+        // `http://34.87.121.155:2121/apiwebpbi/api/package/unit?entity=01&project=01&tower=${tower}`
       );
       console.log('res unit', res.data.data);
       // console.log("res unitss", res);
       setDataUnit(res.data.data);
+      fetchCust(res.data.data, tower);
       // console.log("dataunit", dataUnit);
     } catch (error) {
       setErrors(error.ressponse.data);
@@ -213,16 +273,23 @@ const Package = (props) => {
     console.log('where tower untuk tower', paramsTower);
     console.log('where er', paramsUnit);
 
-    const tower = towerNo;
-    const unit = unitNo;
-    console.log('where tower untuk er', tower);
-    console.log('where tower untuk tw', unit);
+    // const tower = towerNo;
+    // const unit = unitNo;
+    // console.log('where tower untuk er', tower);
+    // console.log('where tower untuk tw', unit);
 
     try {
       const res = await axios.get(
-        `http://34.87.121.155:2121/apiwebpbi/api/package/unit/tenant?entity=01&project=01&tower=${tower}&lotno=${unit}`
+        // `http://34.87.121.155:2121/apiwebpbi/api/package/unit/tenant?entity=01&project=01&tower=${towerNo}&lotno=${paramsUnit.lot_no}`
+        `http://103.111.204.131/apiwebpbi/api/package/unit/tenant?entity=01&project=01&tower=${towerNo}&lotno=${paramsUnit.lot_no}`
       );
+      // const x = 'Other';
+      // const y = res.data.data;
+      // const z = y.concat(x);
+      // let xy = res.data.data;
+      // xy = [...xy, { member_name: 'Other' }];
       setDataCust(res.data.data);
+
       console.log('dataunit', dataCust);
     } catch (error) {
       setErrors(error.ressponse.data);
@@ -233,7 +300,8 @@ const Package = (props) => {
   async function fetchType() {
     try {
       const res = await axios.get(
-        'http://34.87.121.155:2121/apiwebpbi/api/package/type'
+        'http://103.111.204.131/apiwebpbi/api/package/type'
+        // `http://34.87.121.155:2121/apiwebpbi/api/package/type`
       );
       setDataType(res.data.data);
       console.log('datatype', dataType);
@@ -245,6 +313,7 @@ const Package = (props) => {
 
   useEffect(() => {
     fetchGate();
+    fetchCourier();
     fetchTower();
     fetchUnit();
     fetchCust();
@@ -275,6 +344,9 @@ const Package = (props) => {
     ImagePicker.openCamera({
       width: 300,
       height: 400,
+      compressImageMaxHeight: 300,
+      compressImageMaxWidth: 300,
+      compressImageQuality: 1,
     }).then((image) => {
       onSelectedImage(image);
       console.log('itemimage', image);
@@ -320,6 +392,14 @@ const Package = (props) => {
       alert('Please enter Unit');
       return;
     }
+    if (!valueCourier.trim()) {
+      alert('Please enter Courier');
+      return;
+    }
+    if (!delVehicle.trim()) {
+      alert('Please enter Vehicle number');
+      return;
+    }
     if (!valueCust.trim()) {
       alert('Please enter Name Resident');
       return;
@@ -345,11 +425,17 @@ const Package = (props) => {
     console.log('unit', unit);
     const resident = valueCust;
     console.log('resident', resident);
+    const courier = valueCourier;
+    console.log('gate', courier);
+    const courierOther = nameOtherCourier;
+    console.log('courierOther', courierOther);
     const devname = nameDelivery;
     console.log('devname', devname);
     const devhape = hpDelivery;
     console.log('devhape', devhape);
     const sendername = nameSender;
+    const vehicle = delVehicle;
+    console.log('gate', vehicle);
     console.log('sendername', sendername);
     const senderhape = hpSender;
     console.log('senderhape', senderhape);
@@ -364,14 +450,19 @@ const Package = (props) => {
     bodyData.append('entity_cd', '01');
     bodyData.append('project_no', '01');
     bodyData.append('gate_cd', gate);
+    bodyData.append('courier', courier);
     bodyData.append('tower', tower);
     bodyData.append('lot_no', unit);
     bodyData.append('tenant_name', resident);
+    bodyData.append('other_tenant', nameOtherCus);
+    bodyData.append('courier_cd', courier);
+    bodyData.append('other_courier', nameOtherCourier);
     bodyData.append('deliveryman_name', devname);
     bodyData.append('deliveryman_hp', devhape);
     bodyData.append('sender_name', sendername);
     bodyData.append('sender_hp', senderhape);
     bodyData.append('package_type', type);
+    bodyData.append('other_type', nameType);
     bodyData.append('package_qty', kuantity);
     bodyData.append('userfile', {
       uri: image,
@@ -381,7 +472,8 @@ const Package = (props) => {
     bodyData.append('userid', 'MGR');
 
     console.log('liatbody', bodyData);
-    return fetch('http://34.87.121.155:2121/apiwebpbi/api/package/save', {
+    return fetch('http://103.111.204.131/apiwebpbi/api/package/save', {
+      // return fetch('http://34.87.121.155:2121/apiwebpbi/api/package/save', {
       method: 'post',
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -400,6 +492,7 @@ const Package = (props) => {
       });
   };
   const renderContent = () => {
+    // console.log('cekkk', valueType)
     return (
       <SafeAreaView
         style={BaseStyle.safeAreaView}
@@ -437,6 +530,7 @@ const Package = (props) => {
                 label: 'gate_name',
                 value: 'gate_cd',
               }}
+              placeholder={t('Select Gates')}
               listMode='MODAL'
               open={open}
               items={dataGate}
@@ -463,6 +557,7 @@ const Package = (props) => {
                 label: 'descs',
                 value: 'lot_type',
               }}
+              placeholder={t('Select Towers')}
               listMode='MODAL'
               open={openTower}
               items={dataTower}
@@ -497,6 +592,7 @@ const Package = (props) => {
                 label: 'lot_no',
                 value: 'lot_no',
               }}
+              placeholder={t('Select Units')}
               listMode='MODAL'
               open={openUnit}
               items={dataUnit}
@@ -531,6 +627,7 @@ const Package = (props) => {
                 label: 'member_name',
                 value: 'member_name',
               }}
+              placeholder={t('Select Residents')}
               listMode='MODAL'
               open={openCust}
               items={dataCust}
@@ -539,6 +636,7 @@ const Package = (props) => {
               value={valueCust}
               searchable={true}
               setValue={setValueCust}
+              onClose={() => setItemSelected(!itemSelected)}
               onValueChange={(itemValue) =>
                 // setValueTower(itemValue)
                 setValueCust(itemValue)
@@ -554,6 +652,79 @@ const Package = (props) => {
               }}
             />
           </View>
+          {valueCust == 'Other' ? (
+            // console.log('hhh', valueCourier)
+            <View
+              style={[
+                styles.profileItem,
+                {
+                  borderBottomColor: colors.border,
+                  borderBottomWidth: 1,
+                },
+              ]}>
+              <View style={styles.contentTitle}>
+                <Text semibold>{t('Other Residents Name')}</Text>
+              </View>
+              <TextInput
+                style={{ width: '70%' }}
+                autoCorrect={false}
+                value={nameOtherCus}
+                onChangeText={setOtherCust}
+                placeholder={t('Other Residents Name')}
+              />
+            </View>
+          ) : null}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginVertical: 5,
+            }}>
+            <DropDownPicker
+              schema={{
+                label: 'courier_cd',
+                value: 'courier_cd',
+              }}
+              placeholder={t('Select Couriers')}
+              listMode='MODAL'
+              open={openCourier}
+              items={dataCourier}
+              setItems={setDataCourier}
+              setOpen={setOpenCourier}
+              value={valueCourier}
+              searchable={true}
+              setValue={setValueCourier}
+              onClose={() => setItemSelected(!itemSelected)}
+              style={{
+                paddingHorizontal: 20,
+                height: 50,
+                width: '100%',
+              }}
+              key={'courier_cd'}
+            />
+          </View>
+          {valueCourier == 'Other' ? (
+            // console.log('hhh', valueCourier)
+            <View
+              style={[
+                styles.profileItem,
+                {
+                  borderBottomColor: colors.border,
+                  borderBottomWidth: 1,
+                },
+              ]}>
+              <View style={styles.contentTitle}>
+                <Text semibold>{t('Other Courier Name')}</Text>
+              </View>
+              <TextInput
+                style={{ width: '70%' }}
+                autoCorrect={false}
+                value={nameOtherCourier}
+                onChangeText={setOtherCourier}
+                placeholder={t('Other Courier Name')}
+              />
+            </View>
+          ) : null}
 
           <View
             style={[
@@ -594,6 +765,27 @@ const Package = (props) => {
               value={hpDelivery}
               onChangeText={valueHpDelivery}
               keyboardType='phone-pad'
+              maxLength={14}
+            />
+          </View>
+          <View
+            style={[
+              styles.profileItem,
+              {
+                borderBottomColor: colors.border,
+                borderBottomWidth: 1,
+              },
+            ]}>
+            <View style={styles.contentTitle}>
+              <Text semibold>{t('Delivery Vehicles')}</Text>
+            </View>
+
+            <TextInput
+              style={{ width: '70%' }}
+              autoCorrect={false}
+              placeholder={t('Delivery Vehicle')}
+              value={delVehicle}
+              onChangeText={valueDelVehicle}
               maxLength={14}
             />
           </View>
@@ -666,7 +858,7 @@ const Package = (props) => {
                   return (
                     <Picker.Item
                       value={item.package_type}
-                      label={item.package_type}
+                      label={item.package_descs}
                       key={index}
                     />
                   );
@@ -674,6 +866,27 @@ const Package = (props) => {
               </Picker>
             </View>
           </View>
+          {valueType == 'Other' ? (
+            <View
+              style={[
+                styles.profileItem,
+                {
+                  borderBottomColor: colors.border,
+                  borderBottomWidth: 1,
+                },
+              ]}>
+              <View style={styles.contentTitle}>
+                <Text semibold>{t('Other Type')}</Text>
+              </View>
+              <TextInput
+                style={{ width: '70%' }}
+                autoCorrect={false}
+                value={nameType}
+                onChangeText={setNameType}
+                placeholder={t('Other Type')}
+              />
+            </View>
+          ) : null}
           <View
             style={[
               styles.profileItem,

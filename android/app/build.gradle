@@ -1,15 +1,12 @@
 apply plugin: "com.android.application"
-
+apply from: "../../node_modules/react-native/react.gradle"
 import com.android.build.OutputFile
 
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
 ]
-
-apply from: "../../node_modules/react-native/react.gradle"
-
-def enableSeparateBuildPerCPUArchitecture = false
-def enableProguardInReleaseBuilds = false
+def enableSeparateBuildPerCPUArchitecture = true
+def enableProguardInReleaseBuilds = true
 def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
@@ -28,7 +25,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 4
-        versionName "1.0.2"
+        versionName "1.0.3"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
                 vectorDrawables.useSupportLibrary = true
@@ -38,7 +35,7 @@ android {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
+            universalApk true  // If true, also generate a universal APK
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }

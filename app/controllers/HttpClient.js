@@ -8,7 +8,9 @@ import axios from 'axios';
   timeouts and middleware used for each request.
 */
 const client = axios.create({
-  baseURL: 'http://34.87.121.155:8181/apiwebpbi/api',
+  baseURL: 'http://103.111.204.131/apiwebpbi/api/',
+  // baseURL: 'http://34.87.121.155:8181/apiwebpbi/api',
+
   // baseURL: "http://35.198.219.220:2121/alfaAPI/approval",
 
   timeout: 10000,

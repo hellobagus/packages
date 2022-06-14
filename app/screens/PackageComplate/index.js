@@ -9,6 +9,7 @@ import { ScrollView, View } from 'react-native';
 import styles from './styles';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNPrint from 'react-native-print';
+import QRCode from 'react-native-qrcode-svg';
 
 export default function PackageComplate({ route, navigation }) {
   const { colors } = useTheme();
@@ -28,9 +29,14 @@ export default function PackageComplate({ route, navigation }) {
     lot_no,
     package_qty,
     package_type,
+    other_type,
     tenant_name,
+    other_tenant,
+    courier_cd,
+    other_courier,
     tower,
     received_by,
+    nameType,
     received_date,
     deliveryman_name,
     deliveryman_hp,
@@ -39,10 +45,26 @@ export default function PackageComplate({ route, navigation }) {
   // const itemprops = { ...passProp };
   // console.log('urutan ke empat props', itemprops);
 
+  const codecd = () => {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+        }}>
+        <QRCode value={package_id} size={100} />
+      </View>
+    );
+  };
+
   const printPDF = async () => {
     const result = await RNHTMLtoPDF.convert({
-      html: `<h1>Package ID = ${package_id}</h1>
-      <h1>Tenant Name  = ${tenant_name}</h1>`,
+      html: `
+      <div style="text-align:center; justify-content:center;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?data=${package_id}&amp;size=100x100" alt="" title="package_id" />
+
+      <h3>Package ID = ${package_id}</h3>
+      <h4>Tenant Name  = ${tenant_name}</h4>
+      </div>`,
       fileName: `${package_id}`,
       base64: true,
     });
@@ -64,6 +86,12 @@ export default function PackageComplate({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20 }}>
         <View style={[styles.headerView]}>
+          <View
+            style={{
+              alignItems: 'center',
+            }}>
+            <QRCode value={package_id} size={100} />
+          </View>
           <View
             style={{
               paddingVertical: 10,
@@ -116,6 +144,9 @@ export default function PackageComplate({ route, navigation }) {
               <Text body1 style={{ paddingTop: 4 }}>
                 {tenant_name}
               </Text>
+              <Text body1 style={{ paddingTop: 4 }}>
+                {other_tenant}
+              </Text>
             </View>
           </View>
           <View
@@ -156,6 +187,9 @@ export default function PackageComplate({ route, navigation }) {
               <Text body1 style={{ paddingTop: 4 }}>
                 {package_type}
               </Text>
+              <Text body1 style={{ paddingTop: 4 }}>
+                {other_type}
+              </Text>
             </View>
             <View style={{ flex: 1 }}>
               <Text capption1 grayColor>
@@ -190,6 +224,25 @@ export default function PackageComplate({ route, navigation }) {
               </Text>
             </View>
           </View>
+          <View
+            style={{
+              marginTop: 16,
+              flexDirection: 'row',
+              marginHorizontal: 50,
+              textAlign: 'center',
+            }}>
+            <View style={{ flex: 1 }}>
+              <Text capption1 grayColor>
+                Courier
+              </Text>
+              <Text body1 style={{ paddingTop: 4 }}>
+                {courier_cd}
+              </Text>
+              <Text body1 style={{ paddingTop: 4 }}>
+                {other_courier}
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           style={{
@@ -199,7 +252,7 @@ export default function PackageComplate({ route, navigation }) {
           <Button
             icon={
               <Icon
-                name='plus'
+                name='arrow-left'
                 color={colors.primary}
                 style={{ marginRight: 5 }}
               />

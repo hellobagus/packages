@@ -50,7 +50,7 @@ function PackageHistory(props) {
   // Make function to call the api
   // useEffect(() => {
   //   axios
-  //     .get('http://34.87.121.155:2121/apiwebpbi/api/package/history/P')
+  //     .get('http://103.111.204.131/apiwebpbi/api/package/history/P')
   //     .then((response) => {
   //       console.log('response', JSON.stringify(response));
   //       setData(response);
@@ -59,7 +59,9 @@ function PackageHistory(props) {
 
   useEffect(() => {
     async function fetchData() {
-      const URL = 'http://34.87.121.155:2121/apiwebpbi/api/package/history/P';
+      const URL = 'http://103.111.204.131/apiwebpbi/api/package/history/P';
+      // const URL = 'http://34.87.121.155:8181/apiwebpbi/api/package/history/P';
+
       try {
         const res = await axios.get(URL);
         console.log('datahistor', res.data.data);
@@ -111,7 +113,12 @@ function PackageHistory(props) {
               gate_name={item.gate_name}
               tenant_name={item.tenant_name}
               tower={item.tower}
+              other_tenant={item.other_tenant}
+              courier_cd={item.courier_cd}
+              other_courier={item.other_courier}
               lot_no={item.lot_no}
+              package_type={item.package_type}
+              other_type={item.other_type}
               deliveryman_name={item.deliveryman_name}
               deliveryman_hp={item.deliveryman_hp}
               package_descs={item.package_descs}

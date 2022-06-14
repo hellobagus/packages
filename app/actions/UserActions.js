@@ -1,3 +1,5 @@
+/** @format */
+
 import UserController from '../controllers/UserController';
 
 export const actionTypes = {
@@ -26,12 +28,12 @@ const loginRequest = () => ({
   type: actionTypes.LOGIN_REQUEST,
 });
 
-const loginError = error => ({
+const loginError = (error) => ({
   type: actionTypes.LOGIN_ERROR,
   error,
 });
 
-const loginSuccess = user => ({
+const loginSuccess = (user) => ({
   type: actionTypes.LOGIN_SUCCESS,
   user,
 });
@@ -40,12 +42,12 @@ const resetPassRequest = () => ({
   type: actionTypes.RESETPASS_REQUEST,
 });
 
-const resetPassError = error => ({
+const resetPassError = (error) => ({
   type: actionTypes.RESETPASS_ERROR,
   error,
 });
 
-const resetPassSuccess = user => ({
+const resetPassSuccess = (user) => ({
   type: actionTypes.RESETPASS_SUCCESS,
   user,
 });
@@ -54,12 +56,12 @@ const changePassRequest = () => ({
   type: actionTypes.CHANGEPASS_REQUEST,
 });
 
-const changePassError = error => ({
+const changePassError = (error) => ({
   type: actionTypes.CHANGEPASS_ERROR,
   error,
 });
 
-const changePassSuccess = user => ({
+const changePassSuccess = (user) => ({
   type: actionTypes.CHANGEPASS_SUCCESS,
   user,
 });
@@ -72,12 +74,12 @@ const logoutRequest = () => ({
   type: actionTypes.LOGOUT,
 });
 
-const removeUser = user => ({
+const removeUser = (user) => ({
   type: actionTypes.REMOVE_USER,
   user: null,
 });
 
-export const login = (email, password, token_firebase) => async dispatch => {
+export const login = (email, password, token_firebase) => async (dispatch) => {
   dispatch(loginRequest());
   try {
     const user = await UserController.login(email, password, token_firebase);
@@ -90,7 +92,7 @@ export const login = (email, password, token_firebase) => async dispatch => {
   }
 };
 
-export const reset = (newPass, conPass, email) => async dispatch => {
+export const reset = (newPass, conPass, email) => async (dispatch) => {
   dispatch(resetPassRequest());
   try {
     const user = await UserController.resetPassword(newPass, conPass, email);
@@ -106,20 +108,20 @@ export const reset = (newPass, conPass, email) => async dispatch => {
   }
 };
 
-export const logout = () => async dispatch => {
+export const logout = () => async (dispatch) => {
   UserController.logout();
   dispatch(logoutRequest());
   // dispatch(logout());
   dispatch(removeUser());
 };
 
-export const saveProfile = data => async dispatch => {
+export const saveProfile = (data) => async (dispatch) => {
   const res = await UserController.saveProfile(data);
   alert(res.Pesan);
   dispatch(editRequest());
 };
 
-export const changePass = (email, pass, conpass) => async dispatch => {
+export const changePass = (email, pass, conpass) => async (dispatch) => {
   dispatch(changePassRequest());
   try {
     const res = await UserController.changePassword(email, pass, conpass);

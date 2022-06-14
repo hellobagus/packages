@@ -30,17 +30,21 @@ const TransactionExpand = ({
   lot_no = '',
   tenant_name = '',
   tenant_email = '',
+  courier_cd = '',
+  other_courier = '',
   deliveryman_name = '',
   deliveryman_hp = '',
   sender_name = '',
   sender_hp = '',
   package_id = '',
   package_type = '',
+  other_type = '',
   package_descs = '',
   package_qty = '',
   package_picture = '',
   status = 'P',
   received_by = '',
+  other_tenant = '',
   received_date = '',
   ListTransactionProps = {
     icon: 'exchange-alt',
@@ -51,6 +55,7 @@ const TransactionExpand = ({
     tower: tower,
     tower_descs: tower_descs,
     lot_no: lot_no,
+    other_tenant: other_tenant,
     tenant_name: tenant_name,
     tenant_email: tenant_email,
     deliveryman_name: deliveryman_name,
@@ -139,6 +144,27 @@ const TransactionExpand = ({
               </Text>
             </View>
           </View>
+          <View style={[styles.container, style]}>
+            <View>
+              <Text subhead light style={styles.title}>
+                Courier
+              </Text>
+              <Text footnote semibold>
+                {courier_cd}
+              </Text>
+              <Text footnote semibold>
+                {other_courier}
+              </Text>
+            </View>
+            <View style={styles.viewRight}>
+              <Text subhead light style={styles.title}>
+                Quantity
+              </Text>
+              <Text footnote semibold>
+                {package_qty}
+              </Text>
+            </View>
+          </View>
 
           <View style={[styles.container, style]}>
             <View>
@@ -147,6 +173,9 @@ const TransactionExpand = ({
               </Text>
               <Text footnote semibold>
                 {package_descs}
+              </Text>
+              <Text footnote semibold>
+                {other_type}
               </Text>
             </View>
             <View style={styles.viewRight}>

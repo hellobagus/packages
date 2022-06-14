@@ -24,6 +24,7 @@ const ListTransaction = ({
   deliveryman_hp = deliveryman_hp,
   sender_name = sender_name,
   sender_hp = sender_hp,
+  other_tenant: other_tenant,
   package_id = package_id,
   package_type = package_type,
   package_descs = package_descs,
@@ -52,6 +53,9 @@ const ListTransaction = ({
         </Text>
         <Text footnote semibold style={[styles.text, { marginTop: 5 }]}>
           {tenant_name}
+        </Text>
+        <Text footnote semibold style={[styles.text, { marginTop: 5 }]}>
+          {other_tenant}
         </Text>
       </View>
     </TouchableOpacity>
